@@ -1,0 +1,2 @@
+Django==3.2.8
+private_wheels/django_gdpr_cookie_consent-0.2.1-py2.py3-none-any.whl
