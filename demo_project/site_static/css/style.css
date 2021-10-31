@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    --primary: #ffab23;
+    min-height: 100vh;
+}
+body {
+    font-family: 'Open Sans', sans-serif;
+    position: relative;
+    background-image: url("https://picsum.photos/1200");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    box-sizing: border-box;
+    padding: 2rem;
+}
+
+.content {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    background-attachment: fixed;
+}
+section {
+    margin-bottom: 2rem;
+}
+p {
+    margin: 1em 0;
+}
+ul {
+    padding: 0;
+}
+li {
+    margin-left: 1.2em;
+    margin-bottom: 1rem;
+}
+table {
+    border-collapse: collapse;
+}
+.primary-button {
+    box-shadow:inset 0 1px 0 0 #fff6af;
+    background:linear-gradient(to bottom, #ffec64 5%, var(--primary) 100%);
+    background-color:#ffec64;
+    border-radius:6px;
+    border:1px solid var(--primary);
+    display:inline-block;
+    cursor:pointer;
+    color:#333333;
+    font-size:15px;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0 1px 0 #ffee66;
+}
+.primary-button:hover {
+    background:linear-gradient(to bottom, var(--primary) 5%, #ffec64 100%);
+    background-color: var(--primary);
+}
+.primary-button:active {
+    position:relative;
+    top:1px;
+}
+
+.secondary-button {
+    box-shadow:inset 0 1px 0 0 #ffffff;
+    background:linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+    background-color:#f9f9f9;
+    border-radius:6px;
+    border:1px solid #dcdcdc;
+    display:inline-block;
+    cursor:pointer;
+    color:#666666;
+    font-size:15px;
+    padding:6px 24px;
+    text-decoration:none;
+    text-shadow:0 1px 0 #ffffff;
+}
+.secondary-button:hover {
+    background:linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+    background-color:#e9e9e9;
+}
+.secondary-button:active {
+    position:relative;
+    top:1px;
+}

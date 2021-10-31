@@ -1,0 +1,12 @@
+<script>
+    (function(){
+        Cookies.set('marketing_cookie', '{{ MARKETING_COOKIE_VALUE }}');
+        var p = document.createElement('p');
+        p.appendChild(
+            document.createTextNode(
+                'Marketing code loaded. ' + Cookies.get('marketing_cookie')
+            )
+        );
+        document.getElementById('content').appendChild(p);
+    })();
+</script>

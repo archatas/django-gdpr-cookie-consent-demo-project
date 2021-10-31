@@ -1,5 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
-    Hello, World!
+    <h1 class="animated">Hello, World!</h1>
+    <p>
+        {% url "cookie_consent:cookies_management" as cookie_management_url %}
+        <a href="{{ cookie_management_url }}" rel="nofollow">
+            🥠 {% trans "Manage Cookies" %}
+        </a>
+    </p>
 {% endblock %}

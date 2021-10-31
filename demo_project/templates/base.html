@@ -1,15 +1,24 @@
+{% load static %}
 <!doctype html>
 <html lang="">
 
 <head>
-  <meta charset="utf-8">
-  <title>Django GDPR Cookie Consent Demo Project</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Django GDPR Cookie Consent Demo Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'gdpr-cookie-consent/css/gdpr-cookie-consent.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
 </head>
 
 <body>
+
+<div id="content" class="content">
     {% block content %}
     {% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+{% include "gdpr_cookie_consent/includes/cookie_consent.html" %}
 </body>
 
 </html>

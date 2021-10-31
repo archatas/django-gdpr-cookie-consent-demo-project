@@ -1,0 +1,12 @@
+<script>
+    (function(){
+        Cookies.set('performance_cookie', '{{ PERFORMANCE_COOKIE_VALUE }}');
+        var p = document.createElement('p');
+        p.appendChild(
+            document.createTextNode(
+                'Performance code loaded. ' +  Cookies.get('performance_cookie')
+            )
+        );
+        document.getElementById('content').appendChild(p);
+    })();
+</script>
