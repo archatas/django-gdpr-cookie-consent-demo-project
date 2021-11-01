@@ -110,9 +110,17 @@ db.sqlite3
 !/static/.gitkeep
 
 # media directory
+/static/*
+!/static/.gitkeep
+
+# media directory
 /media/*
 !/media/.gitkeep
 
 # private wheels directory. In real life you wouldn't ignore this directory
 /private_wheels/*
 !/private_wheels/.gitkeep
+
+# Webdrivers
+/drivers/*
+!/drivers/README.md

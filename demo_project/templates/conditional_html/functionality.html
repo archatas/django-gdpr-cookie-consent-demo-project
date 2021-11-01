@@ -1,3 +1,16 @@
+<script>
+    (function(){
+        Cookies.set('functionality_cookie', '{{ FUNCTIONALITY_COOKIE_VALUE }}');
+        var p = document.createElement('p');
+        p.appendChild(
+            document.createTextNode(
+                'Functionality code loaded. ' + Cookies.get('functionality_cookie')
+            )
+        );
+        document.getElementById('content').appendChild(p);
+    })();
+</script>
+
 <style>
     .animated .letter {
         display: inline-block;
@@ -9,15 +22,6 @@
 
 <script>
     (function(){
-        Cookies.set('functionality_cookie', '{{ FUNCTIONALITY_COOKIE_VALUE }}');
-        var p = document.createElement('p');
-        p.appendChild(
-            document.createTextNode(
-                'Functionality code loaded. ' + Cookies.get('functionality_cookie')
-            )
-        );
-        document.getElementById('content').appendChild(p);
-
         // Wrap every letter in a span
         var textWrapper = document.querySelector('.animated');
         textWrapper.innerHTML = textWrapper.textContent.replace(

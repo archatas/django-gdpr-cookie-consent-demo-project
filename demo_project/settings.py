@@ -125,6 +125,7 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / "demo_project" / "site_static",
 ]
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
 
 # Default primary key field type
@@ -330,3 +331,5 @@ COOKIE_CONSENT_SETTINGS = {
         },
     ]
 }
+
+TESTS_SHOW_BROWSER = True
