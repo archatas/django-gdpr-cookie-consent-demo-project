@@ -8,6 +8,8 @@ from django.test import override_settings
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 
 from gdpr_cookie_consent.models import CookieConsentRecord
 
@@ -28,7 +30,7 @@ class CookieManagementTest(LiveServerTestCase):
         chrome_options = Options()
         if not SHOW_BROWSER:
             chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1200,800")
+        chrome_options.add_argument("--window-size=1280,720")
 
         cls.browser = webdriver.Chrome(
             executable_path=driver_path, options=chrome_options
@@ -44,9 +46,26 @@ class CookieManagementTest(LiveServerTestCase):
             lambda x: self.browser.find_element_by_css_selector(css_selector)
         )
 
+    def wait_until_element_found_and_interactable(self, css_selector):
+        return WebDriverWait(self.browser, timeout=10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, css_selector))
+        )
+
     def wait_a_little(self, seconds=2):
         if SHOW_BROWSER:
             sleep(seconds)
+
+    def focus_element(self, css_selector):
+        self.browser.execute_script(f"""
+            document.querySelector('{css_selector}').scrollIntoView(true);
+            document.querySelector('{css_selector}').focus();
+        """)
+        self.wait_a_little(1)
+        element = self.browser.find_element_by_css_selector(css_selector)
+        action = webdriver.ActionChains(self.browser)
+        action.move_to_element(element).perform()
+        self.wait_a_little(1)
+        return element
 
     def test_01_accept_all_cookies(self):
         """
@@ -54,14 +73,11 @@ class CookieManagementTest(LiveServerTestCase):
         """
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
+        #self.wait_a_little(30)  # DEBUG: prepare the screen recording
         button = self.wait_until_element_found("#cc_accept_all_cookies")
-
-        self.browser.execute_script("""
-            document.getElementById('cc_accept_all_cookies').focus();
-        """)
-        self.wait_a_little()
+        self.focus_element("#cc_accept_all_cookies")
         button.click()
-        self.wait_a_little(3)
+        self.wait_a_little()
 
         self.assertEqual(
             unquote(self.browser.get_cookie("cookie_consent")["value"]),
@@ -85,13 +101,9 @@ class CookieManagementTest(LiveServerTestCase):
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
         button = self.wait_until_element_found("#cc_reject_all_cookies")
-
-        self.browser.execute_script("""
-            document.getElementById('cc_reject_all_cookies').focus();
-        """)
-        self.wait_a_little()
+        self.focus_element("#cc_reject_all_cookies")
         button.click()
-        self.wait_a_little(3)
+        self.wait_a_little()
 
         self.assertEqual(
             unquote(self.browser.get_cookie("cookie_consent")["value"]),
@@ -115,24 +127,14 @@ class CookieManagementTest(LiveServerTestCase):
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
         button = self.wait_until_element_found("#cc_manage_cookies")
-
-        self.browser.execute_script("""
-            document.getElementById('cc_manage_cookies').focus();
-        """)
-        self.wait_a_little()
+        self.focus_element("#cc_manage_cookies")
+        button.click()
+        switch = self.focus_element("#cc_switch_functionality")
+        switch.click()
+        button = self.wait_until_element_found_and_interactable("#cc_save_preferences")
+        self.focus_element("#cc_save_preferences")
         button.click()
         self.wait_a_little()
-        switch = self.browser.find_elements_by_css_selector(".cc-switch")[1]
-        self.browser.execute_script("""
-            document.querySelectorAll('.cc-switch')[1].focus();
-        """)
-        switch.click()
-        self.wait_a_little()
-        self.browser.execute_script("""
-            document.getElementById('cc_save_preferences').focus();
-        """)
-        self.browser.find_element_by_id("cc_save_preferences").click()
-        self.wait_a_little(3)
 
         self.assertEqual(
             unquote(self.browser.get_cookie("cookie_consent")["value"]),
@@ -161,11 +163,7 @@ class CookieManagementTest(LiveServerTestCase):
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
         button = self.wait_until_element_found("#cc_modal_close")
-
-        self.browser.execute_script("""
-            document.getElementById('cc_modal_close').focus();
-        """)
-        self.wait_a_little()
+        self.focus_element("#cc_modal_close")
         button.click()
 
         self.assertEqual(
@@ -180,20 +178,20 @@ class CookieManagementTest(LiveServerTestCase):
         self.assertEqual(
             self.browser.get_cookie("marketing_cookie"), None,
         )
-        self.browser.execute_script("""
-            document.getElementById('manage_cookies').focus();
-        """)
-        self.wait_a_little()
-        self.browser.find_element_by_id("manage_cookies").click()
+        link = self.browser.find_element_by_css_selector("#manage_cookies")
+        self.focus_element("#manage_cookies")
+        link.click()
         button = self.wait_until_element_found("#cc_accept_all")
+        self.focus_element("#cc_accept_all")
         button.click()
         self.wait_a_little()
-        self.browser.execute_script("""
-            document.getElementById('cc_save_preferences').focus();
-        """)
-        self.browser.find_element_by_id("cc_save_preferences").click()
-        button = self.wait_until_element_found("#manage_cookies")
+        button = self.browser.find_element_by_css_selector("#cc_save_preferences")
+        self.focus_element("#cc_save_preferences")
+        button.click()
         self.wait_a_little()
+
+        link = self.wait_until_element_found_and_interactable("#manage_cookies")
+        self.focus_element("#manage_cookies")
 
         self.assertEqual(
             unquote(self.browser.get_cookie("cookie_consent")["value"]),
@@ -208,15 +206,17 @@ class CookieManagementTest(LiveServerTestCase):
         self.assertEqual(
             unquote(self.browser.get_cookie("marketing_cookie")["value"]), "📢",
         )
-        button.click()
+        link.click()
         button = self.wait_until_element_found("#cc_reject_all")
+        self.focus_element("#cc_reject_all")
         button.click()
         self.wait_a_little()
-        self.browser.execute_script("""
-            document.getElementById('cc_save_preferences').focus();
-        """)
-        self.browser.find_element_by_id("cc_save_preferences").click()
-        self.wait_until_element_found("#manage_cookies")
+        button = self.browser.find_element_by_css_selector("#cc_save_preferences")
+        self.focus_element("#cc_save_preferences")
+        button.click()
+        self.wait_a_little()
+
+        self.wait_until_element_found_and_interactable("#manage_cookies")
         self.wait_a_little()
 
         self.assertEqual(
