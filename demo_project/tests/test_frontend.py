@@ -31,6 +31,7 @@ class CookieManagementTest(LiveServerTestCase):
         if not SHOW_BROWSER:
             chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1280,720")
+        chrome_options.add_argument("--window-position=50,50")
 
         cls.browser = webdriver.Chrome(
             executable_path=driver_path, options=chrome_options
@@ -73,7 +74,7 @@ class CookieManagementTest(LiveServerTestCase):
         """
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
-        #self.wait_a_little(30)  # DEBUG: prepare the screen recording
+        # self.wait_a_little(30)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_accept_all_cookies")
         self.focus_element("#cc_accept_all_cookies")
         button.click()
@@ -100,6 +101,7 @@ class CookieManagementTest(LiveServerTestCase):
         """
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
+        # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_reject_all_cookies")
         self.focus_element("#cc_reject_all_cookies")
         button.click()
@@ -126,6 +128,7 @@ class CookieManagementTest(LiveServerTestCase):
         """
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
+        # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_manage_cookies")
         self.focus_element("#cc_manage_cookies")
         button.click()
@@ -162,6 +165,7 @@ class CookieManagementTest(LiveServerTestCase):
         """
         self.browser.delete_all_cookies()
         self.browser.get(f"{self.live_server_url}/")
+        # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_modal_close")
         self.focus_element("#cc_modal_close")
         button.click()
