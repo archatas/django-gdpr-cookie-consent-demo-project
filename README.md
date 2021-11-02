@@ -49,7 +49,7 @@ Then [download the webdriver matching your Chrome version](https://chromedriver.
 With the virtual environment activated, install pip requirements:
 
 ```shell
-$ (venv) pip install -r requirements.txt
+(venv)$ pip install -r requirements.txt
 ```
 
 ### 5. Run database migrations and collect static files
@@ -57,8 +57,8 @@ $ (venv) pip install -r requirements.txt
 With the virtual environment activated, run database migrations:
 
 ```shell
-$ (venv) python manage.py migrate
-$ (venv) python manage.py collectstatic --noinput
+(venv)$ python manage.py migrate
+(venv)$ python manage.py collectstatic --noinput
 ```
 
 ### 6. Run Selenium tests
@@ -66,7 +66,7 @@ $ (venv) python manage.py collectstatic --noinput
 With the virtual environment activated, run the tests:
 
 ```shell
-$ (venv) python manage.py test
+(venv)$ python manage.py test
 ```
 
 ### 7. Browse
@@ -74,7 +74,7 @@ $ (venv) python manage.py test
 With the virtual environment activated, run development server:
 
 ```shell
-$ (venv) python manage.py runserver
+(venv)$ python manage.py runserver
 ```
 
 Browse the local website under <http://127.0.0.1:8000> and inspect the cookies in web development tools.
