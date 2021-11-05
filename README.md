@@ -16,7 +16,13 @@ Using the Django GDPR Cookie Consent app, you store the following information ab
 
 Descriptions for sections, providers, or cookies are translatable. User preferences are saved in a cookie too. If a particular section is unselected later, cookies related to that section are attempted to get deleted.
 
-## Examples
+## Demo
+
+[![Using Django GDPR Cookie Consent](https://raw.githubusercontent.com/archatas/django-gdpr-cookie-consent-demo-project/primary/assets/video-screenshot.png)](https://youtu.be/nSCdNCHQKUY)
+
+This video was made using the Selenium tests that are included in this project's code.
+
+## Django GDPR Cookie Consent in Production
 
 Django GDPR Cookie Consent is used at
 
