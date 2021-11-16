@@ -38,9 +38,9 @@ $ python3 -m venv venv
 $ source venv/bin/activate
 ```
 
-### 2. Purchase and download django-gdpr-cookie-consent app
+### 2. Purchase and download Django GDPR Cookie Consent app
 
-[Get django-gdpr-cookie-consent from Gumroad](https://websightful.gumroad.com/l/django-gdpr-cookie-consent).
+[Get Django GDPR Cookie Consent from Gumroad](https://websightful.gumroad.com/l/django-gdpr-cookie-consent).
 
 Put the `*.whl` file into `private_wheels/` directory.
 
@@ -89,8 +89,8 @@ Compare the functionality with the source code.
 
 ## Disclaimer
 
-The actual website's compliance with the GDRP Cookie Law depends on the configuration of each use case. The django-gdpr-cookie-consent app provides the mechanism to make that possible, but it's up to you how you configure and integrate it.
+The actual website's compliance with the GDRP Cookie Law depends on the configuration of each use case. The Django GDPR Cookie Consent app provides the mechanism to make that possible, but it's up to you how you configure and integrate it.
 
 ## Contact
 
-For technical questions or bug reports, please contact [@archatas](https://github.com/archatas) on Github or [@DjangoTricks](https://twitter.com/DjangoTricks) on Twitter.
+For technical questions or bug reports, please contact Aidas Bendoraitis at <https://www.djangotricks.com/feedback/>.
