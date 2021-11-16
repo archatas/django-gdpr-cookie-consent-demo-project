@@ -2,7 +2,7 @@
 
 ## Description
 
-This project shows an example of [django-gdpr-cookie-consent](https://websightful.gumroad.com/l/django-gdpr-cookie-consent) app integration into a Django project.
+This project shows an example of [Django GDPR Cookie Consent](https://websightful.gumroad.com/l/django-gdpr-cookie-consent) app integration into a Django project.
 
 As stated by [GDPR cookie law](https://gdpr.eu/cookies/), websites that serve content for people from European Union must get consent from website visitors before storing any cookies that are not strictly necessary for the website to function. Not complying with GDPR laws can result in a fine of up to €20 million or 4% of the company's annual revenue, whichever is greater.
 
