@@ -87,6 +87,10 @@ Browse the local website under <http://127.0.0.1:8000> and inspect the cookies i
 
 Compare the functionality with the source code.
 
+### 8. Play around
+
+[Check the docs](https://archatas.github.io/django-gdpr-cookie-consent-docs/) and try to modify the functionality.
+
 ## Disclaimer
 
 The actual website's compliance with the GDRP Cookie Law depends on the configuration of each use case. The Django GDPR Cookie Consent app provides the mechanism to make that possible, but it's up to you how you configure and integrate it.
