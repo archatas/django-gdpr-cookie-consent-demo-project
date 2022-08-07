@@ -120,3 +120,6 @@ db.sqlite3
 # Webdrivers
 /drivers/*
 !/drivers/README.md
+
+# Don't include the gdpr_cookie_consent itself
+gdpr_cookie_consent
