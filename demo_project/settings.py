@@ -140,14 +140,25 @@ COOKIE_CONSENT_SETTINGS = {
 
     # Description will be used in the modal dialog and cookie management view.
     # Provide either a translatable string or a HTML template name.
-    "description": _(""),
+    "description": "",
     "description_template_name": "gdpr_cookie_consent/descriptions/what_are_cookies.html",
 
     # Extra information will be used at the end of cookie management view.
     # Provide either a translatable string or a HTML template name.
-    "extra_information": _(""),
+    "extra_information": "",
     "extra_information_template_name": "gdpr_cookie_consent/descriptions/extra.html",
 
+    # Button texts can be customized.
+    "buttons": {
+        "accept_all_dialog": _("Accept all recommended"),
+        "reject_all_dialog": _("Reject non-required"),
+        "manage_cookies": _("Manage cookies"),
+        "accept_all_config": _("Accept all"),
+        "reject_all_config": _("Reject all"),
+        "save_preferences": _("Save preferences"),
+        "save_and_close": _("Save and close"),
+        "close": _("Close"),
+    },
     # All important elements will have CSS classes with `cc-` prefix,
     # by which you can target them and overwrite their styling.
     # But you can attach some CSS classes to certain elements too.
