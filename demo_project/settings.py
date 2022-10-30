@@ -194,14 +194,21 @@ COOKIE_CONSENT_SETTINGS = {
             # Required sections will be already selected and read-only
             "required": True,
 
+            # Preselected sections will be selected in the configuration page before the consent is given.
+            # (all required sections will be preselected too and this setting is ignored for those)
+            # N.B. Laws of the United Kingdom, Germany, and France require that
+            # the opt-in consent for cookies must not be pre-enabled,
+            # so consult your lawyers before enabling this setting.
+            "preselected": True,
+
             # Section summary will be shown in the modal dialog and preferences form.
-            # Provide either a translatable string or a HTML template name.
+            # Provide either a translatable string or an HTML template name.
             "summary": _(
                 "These cookies are always on, as they’re essential for making this website work, and making it safe. Without these cookies, services you’ve asked for can’t be provided."),
             "summary_template_name": "",
 
             # Section description will be used at the extended cookie explanation in the cookie management view.
-            # Provide either a translatable string or a HTML template name.
+            # Provide either a translatable string or an HTML template name.
             "description": _(
                 "These cookies are always on, as they’re essential for making this website work, and making it safe. Without these cookies, services you’ve asked for can’t be provided."),
             "description_template_name": "",
@@ -213,7 +220,7 @@ COOKIE_CONSENT_SETTINGS = {
                     "title": _("This website"),
 
                     # Provider description will be used at the extended cookie explanation in the cookie management view.
-                    # Provide either a translatable string or a HTML template name.
+                    # Provide either a translatable string or an HTML template name.
                     "description": "",
                     "description_template_name": "",
 
@@ -261,6 +268,7 @@ COOKIE_CONSENT_SETTINGS = {
             # Conditional HTML snippet will be loaded or rendered if this section is selected
             "conditional_html_template_name": "conditional_html/functionality.html",
             "required": False,
+            "preselected": False,
             "summary": _(
                 "These cookies help us provide enhanced functionality and personalisation, and remember your settings. They may be set by us or by third party providers."),
             "summary_template_name": "",
@@ -289,6 +297,7 @@ COOKIE_CONSENT_SETTINGS = {
             "title": _("Performance Cookies"),
             "conditional_html_template_name": "conditional_html/performance.html",
             "required": False,
+            "preselected": False,
             "summary": _(
                 "These cookies help us analyse how many people are using this website, where they come from and how they're using it. If you opt out of these cookies, we can’t get feedback to make this website better for you and all our users."),
             "summary_template_name": "",
@@ -317,6 +326,7 @@ COOKIE_CONSENT_SETTINGS = {
             "title": _("Marketing Cookies"),
             "conditional_html_template_name": "conditional_html/marketing.html",
             "required": False,
+            "preselected": False,
             "summary": _(
                 "These cookies are set by our advertising partners to track your activity and show you relevant ads on other sites as you browse the internet."),
             "summary_template_name": "",
