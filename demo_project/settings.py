@@ -159,6 +159,12 @@ COOKIE_CONSENT_SETTINGS = {
         "save_and_close": _("Save and close"),
         "close": _("Close"),
     },
+    # Should it be possible to close the dialog without choosing a consent?
+    "show_dialog_close_button": True,
+
+    # Dialog position: center, top, left, right, bottom
+    "dialog_position": "center",
+
     # All important elements will have CSS classes with `cc-` prefix,
     # by which you can target them and overwrite their styling.
     # But you can attach some CSS classes to certain elements too.
