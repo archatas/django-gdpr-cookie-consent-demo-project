@@ -44,19 +44,23 @@ $ source venv/bin/activate
 
 Put the `*.whl` file into `private_wheels/` directory.
 
-### 3. Download appropriate Webdriver for your Chrome version
-
-Download and install [Chrome browser](https://www.google.com/chrome/).
-
-Then [download the webdriver matching your Chrome version](https://chromedriver.chromium.org/downloads) and extract it to `drivers/` directory.
-
-### 4. Install pip requirements into your virtual environment
+### 3. Install pip requirements into your virtual environment
 
 With the virtual environment activated, install pip requirements:
 
 ```shell
 (venv)$ pip install -r requirements.txt
 ```
+
+### 4. Download Webdriver for Chrome
+
+Upgrade your Chrome to the latest version and then run the management command:
+
+```shell
+(venv)$ python manage.py download_chromedriver
+```
+
+It will download and extract the latest stable webdriver for your Chrome browser to the `drivers` directory.
 
 ### 5. Run database migrations and collect static files
 

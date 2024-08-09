@@ -105,21 +105,5 @@ venv.bak/
 # database
 db.sqlite3
 
-# collected static files directory
-/static/*
-!/static/.gitkeep
-
-# media directory
-/media/*
-!/media/.gitkeep
-
-# private wheels directory. In real life you wouldn't ignore this directory
-/private_wheels/*
-!/private_wheels/README.md
-
-# Webdrivers
-/drivers/*
-!/drivers/README.md
-
 # Don't include the gdpr_cookie_consent itself
 gdpr_cookie_consent

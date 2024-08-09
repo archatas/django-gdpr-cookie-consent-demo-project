@@ -33,6 +33,7 @@ class CookieManagementTest(LiveServerTestCase):
             chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1280,720")
         chrome_options.add_argument("--window-position=50,50")
+        chrome_options.add_argument("--disable-search-engine-choice-screen")
 
         cls.browser = webdriver.Chrome(
             service=ChromeService(executable_path=driver_path),
