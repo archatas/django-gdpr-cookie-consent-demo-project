@@ -18,9 +18,17 @@ Descriptions for sections, providers, or cookies are translatable. User preferen
 
 ## Demo
 
-[![Using Django GDPR Cookie Consent](https://raw.githubusercontent.com/archatas/django-gdpr-cookie-consent-demo-project/primary/assets/video-screenshot.png)](https://youtu.be/nSCdNCHQKUY)
+The modal dialog centered:
 
-This video was made using the Selenium tests that are included in this project's code.
+![Django GDPR Cookie Consent centered](https://raw.githubusercontent.com/archatas/django-gdpr-cookie-consent-demo-project/primary/assets/modal-dialog-center.png)
+
+The modal dialog at the bottom:
+
+![Django GDPR Cookie Consent at the bottom](https://raw.githubusercontent.com/archatas/django-gdpr-cookie-consent-demo-project/primary/assets/modal-dialog-bottom.png)
+
+The modal dialog on the right:
+
+![Django GDPR Cookie Consent on the right](https://raw.githubusercontent.com/archatas/django-gdpr-cookie-consent-demo-project/primary/assets/modal-dialog-right.png)
 
 ## Django GDPR Cookie Consent in Production
 
@@ -94,7 +102,7 @@ Compare the functionality with the source code.
 
 ### 8. Play around
 
-[Check the docs](https://archatas.github.io/django-gdpr-cookie-consent-docs/) and try to modify the functionality.
+[Check the docs](https://websightful.github.io/django-gdpr-cookie-consent-docs/) and try to modify the functionality.
 
 ## Disclaimer
 
