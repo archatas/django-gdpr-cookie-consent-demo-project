@@ -28,6 +28,7 @@ Django GDPR Cookie Consent is used at
 
 - [1st things 1st](https://www.1st-things-1st.com)
 - [DjangoTricks](https://www.djangotricks.com)
+- [PyBazaar](https://www.pybazaar.com)
 
 ## How to Install this Demo Project
 
@@ -87,7 +88,7 @@ With the virtual environment activated, run development server:
 (venv)$ python manage.py runserver
 ```
 
-Browse the local website under <http://127.0.0.1:8000> and inspect the cookies in web development tools.
+Browse the local website under <http://127.0.0.1:8000/test/> and inspect the cookies in web development tools.
 
 Compare the functionality with the source code.
 

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from urllib.parse import unquote
 from time import sleep
 
@@ -16,9 +17,11 @@ from gdpr_cookie_consent.models import CookieConsentRecord
 
 
 SHOW_BROWSER = getattr(settings, "TESTS_SHOW_BROWSER", False)
+COOKIE_CONSENT_SETTINGS = deepcopy(settings.COOKIE_CONSENT_SETTINGS)
+COOKIE_CONSENT_SETTINGS["redirect_url"] = "test"
 
 
-@override_settings(DEBUG=True)
+@override_settings(DEBUG=True, COOKIE_CONSENT_SETTINGS=COOKIE_CONSENT_SETTINGS)
 class CookieManagementTest(LiveServerTestCase):
     host = "127.0.0.1"
     port = 8001
@@ -60,10 +63,12 @@ class CookieManagementTest(LiveServerTestCase):
             sleep(seconds)
 
     def focus_element(self, css_selector):
-        self.browser.execute_script(f"""
+        self.browser.execute_script(
+            f"""
             document.querySelector('{css_selector}').scrollIntoView(true);
             document.querySelector('{css_selector}').focus();
-        """)
+        """
+        )
         self.wait_a_little(1)
         element = self.browser.find_element(By.CSS_SELECTOR, css_selector)
         action = webdriver.ActionChains(self.browser)
@@ -76,7 +81,7 @@ class CookieManagementTest(LiveServerTestCase):
         Tries to accept all cookies in the modal dialog.
         """
         self.browser.delete_all_cookies()
-        self.browser.get(f"{self.live_server_url}/")
+        self.browser.get(f"{self.live_server_url}/test/")
         # self.wait_a_little(30)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_accept_all_cookies")
         self.focus_element("#cc_accept_all_cookies")
@@ -88,13 +93,16 @@ class CookieManagementTest(LiveServerTestCase):
             "functionality|performance|marketing",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("functionality_cookie")["value"]), "🛠",
+            unquote(self.browser.get_cookie("functionality_cookie")["value"]),
+            "🛠",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("performance_cookie")["value"]), "📊",
+            unquote(self.browser.get_cookie("performance_cookie")["value"]),
+            "📊",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("marketing_cookie")["value"]), "📢",
+            unquote(self.browser.get_cookie("marketing_cookie")["value"]),
+            "📢",
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
 
@@ -103,7 +111,7 @@ class CookieManagementTest(LiveServerTestCase):
         Tries to reject all cookies in the modal dialog.
         """
         self.browser.delete_all_cookies()
-        self.browser.get(f"{self.live_server_url}/")
+        self.browser.get(f"{self.live_server_url}/test/")
         # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_reject_all_cookies")
         self.focus_element("#cc_reject_all_cookies")
@@ -115,13 +123,16 @@ class CookieManagementTest(LiveServerTestCase):
             '""',
         )
         self.assertEqual(
-            self.browser.get_cookie("functionality_cookie"), None,
+            self.browser.get_cookie("functionality_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("performance_cookie"), None,
+            self.browser.get_cookie("performance_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("marketing_cookie"), None,
+            self.browser.get_cookie("marketing_cookie"),
+            None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
 
@@ -130,7 +141,7 @@ class CookieManagementTest(LiveServerTestCase):
         Tries to manage cookies and accept only functionality cookies in the modal dialog.
         """
         self.browser.delete_all_cookies()
-        self.browser.get(f"{self.live_server_url}/")
+        self.browser.get(f"{self.live_server_url}/test/")
         # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_manage_cookies")
         self.focus_element("#cc_manage_cookies")
@@ -147,13 +158,16 @@ class CookieManagementTest(LiveServerTestCase):
             "functionality",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("functionality_cookie")["value"]), "🛠",
+            unquote(self.browser.get_cookie("functionality_cookie")["value"]),
+            "🛠",
         )
         self.assertEqual(
-            self.browser.get_cookie("performance_cookie"), None,
+            self.browser.get_cookie("performance_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("marketing_cookie"), None,
+            self.browser.get_cookie("marketing_cookie"),
+            None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
 
@@ -167,23 +181,27 @@ class CookieManagementTest(LiveServerTestCase):
         5. and reject all cookies.
         """
         self.browser.delete_all_cookies()
-        self.browser.get(f"{self.live_server_url}/")
+        self.browser.get(f"{self.live_server_url}/test/")
         # self.wait_a_little(4)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_modal_close")
         self.focus_element("#cc_modal_close")
         button.click()
 
         self.assertEqual(
-            self.browser.get_cookie("cookie_consent"), None,
+            self.browser.get_cookie("cookie_consent"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("functionality_cookie"), None,
+            self.browser.get_cookie("functionality_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("performance_cookie"), None,
+            self.browser.get_cookie("performance_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("marketing_cookie"), None,
+            self.browser.get_cookie("marketing_cookie"),
+            None,
         )
         link = self.browser.find_element(By.CSS_SELECTOR, "#manage_cookies")
         self.focus_element("#manage_cookies")
@@ -205,13 +223,16 @@ class CookieManagementTest(LiveServerTestCase):
             "functionality|performance|marketing",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("functionality_cookie")["value"]), "🛠",
+            unquote(self.browser.get_cookie("functionality_cookie")["value"]),
+            "🛠",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("performance_cookie")["value"]), "📊",
+            unquote(self.browser.get_cookie("performance_cookie")["value"]),
+            "📊",
         )
         self.assertEqual(
-            unquote(self.browser.get_cookie("marketing_cookie")["value"]), "📢",
+            unquote(self.browser.get_cookie("marketing_cookie")["value"]),
+            "📢",
         )
         link.click()
         button = self.wait_until_element_found("#cc_reject_all")
@@ -231,12 +252,15 @@ class CookieManagementTest(LiveServerTestCase):
             '""',
         )
         self.assertEqual(
-            self.browser.get_cookie("functionality_cookie"), None,
+            self.browser.get_cookie("functionality_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("performance_cookie"), None,
+            self.browser.get_cookie("performance_cookie"),
+            None,
         )
         self.assertEqual(
-            self.browser.get_cookie("marketing_cookie"), None,
+            self.browser.get_cookie("marketing_cookie"),
+            None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 2)

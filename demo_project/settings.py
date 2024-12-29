@@ -170,10 +170,11 @@ COOKIE_CONSENT_SETTINGS = {
     # by which you can target them and overwrite their styling.
     # But you can attach some CSS classes to certain elements too.
     "styling": {
-        "primary_button_css_classes": "primary-button",
-        "secondary_button_css_classes": "secondary-button",
-        "provider_list_css_classes": "",
-        "provider_item_css_classes": "",
+        "primary_button_css_classes": "btn btn-primary rounded-pill px-3",
+        "secondary_button_css_classes": "btn btn-secondary rounded-pill px-3",
+        "close_button_css_classes": "btn",
+        "provider_list_css_classes": "list-inline",
+        "provider_item_css_classes": "badge bg-secondary font-normal",
         "link_css_classes": "",
         "section_anchor_css_classes": "",
     },
@@ -187,6 +188,9 @@ COOKIE_CONSENT_SETTINGS = {
     # Consent cookie max age say how many seconds to keep the cookie consent preferences.
     # For example, it can be approximately six months
     "consent_cookie_max_age": 60 * 60 * 24 * 30 * 6,
+
+    # URL of the page where you get redirected after saving the cookie settings
+    "redirect_url": "/",
 
     # Sections define the purposes of cookie groups.
     # For example: Essential, Functionality, Performance, and Marketing

@@ -1,13 +1,17 @@
 <script>
     (function(){
         Cookies.set('functionality_cookie', '{{ FUNCTIONALITY_COOKIE_VALUE }}');
-        var p = document.createElement('p');
-        p.appendChild(
-            document.createTextNode(
-                'Functionality code loaded. ' + Cookies.get('functionality_cookie')
-            )
-        );
-        document.getElementById('content').appendChild(p);
+        var content = document.getElementById('content');
+        if (content) {
+            var p = document.createElement('p');
+            p.appendChild(
+                document.createTextNode(
+                    'Functionality code loaded. ' + Cookies.get('functionality_cookie')
+                )
+            );
+            content.appendChild(p);
+        }
+        console.log('Functionality code loaded. ' + Cookies.get('functionality_cookie'));
     })();
 </script>
 
