@@ -4,6 +4,7 @@
     --secondary: #545454;
     --light: #FDF5EB;
     --dark: #1E1916;
+    --cc-dialog-margin-correction: -19px;
 }
 html, body {
     margin: 0;
