@@ -4,6 +4,7 @@
     --secondary: #545454;
     --light: #FDF5EB;
     --dark: #1E1916;
+    --cc-backdrop: rgba(0, 0, 0, 0.2);
     --cc-dialog-margin-correction: -19px;
 }
 html, body {
@@ -11,7 +12,9 @@ html, body {
     padding: 0;
     min-height: 100vh;
 }
-
+.cc-modal-dialog::backdrop {
+    backdrop-filter: blur(2px);
+}
 h4,
 h5,
 h6,
