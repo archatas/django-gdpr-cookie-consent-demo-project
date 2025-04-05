@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "demo_project",  # for the management commands
-    "gdpr_cookie_consent.apps.GdprCookieConsentConfig",
+    "gdpr_cookie_consent",
 ]
 
 MIDDLEWARE = [
