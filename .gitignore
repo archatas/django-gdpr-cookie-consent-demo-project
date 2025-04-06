@@ -104,6 +104,3 @@ venv.bak/
 
 # database
 db.sqlite3
-
-# Don't include the gdpr_cookie_consent itself
-gdpr_cookie_consent
