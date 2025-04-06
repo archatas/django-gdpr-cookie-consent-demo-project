@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<section>
+    <header class="cc-header">
+        <h2>{% blocktranslate trimmed %}How to Manage Cookies in the Browser{% endblocktranslate %}</h2>
+    </header>
+
+    {% url "feedback:feedback_message_form" as feedback_url %}
+    <p>{% blocktranslate trimmed %}
+        You can also control cookie usage in your browser:
+    {% endblocktranslate %}</p>
+    <ul>
+        <li><a href="https://support.google.com/chrome/answer/95647">Chrome</a></li>
+        <li><a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop">Firefox</a></li>
+        <li><a href="https://support.microsoft.com/en-us/microsoft-edge/delete-cookies-in-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09">Microsoft Edge</a></li>
+        <li><a href="https://support.apple.com/en-ie/guide/safari/sfri11471/mac">Safari</a></li>
+        <li><a href="https://blogs.opera.com/news/2015/08/how-to-manage-cookies-in-opera/">Opera</a></li>
+    </ul>
+</section>
+
+<section>
+    <header class="cc-header">
+        <h2>{% blocktranslate trimmed %}Django GDPR Cookie Consent{% endblocktranslate %}</h2>
+    </header>
+
+    <p>{% blocktranslate trimmed with version=cookie_consent_controller.get_version %}
+        Cookie management on this website is maintained using <strong>Django GDPR Cookie Consent v{{ version }}</strong>, a tool that helps us obtain and manage your consent for the use of cookies in accordance with the <strong>General Data Protection Regulation (GDPR)</strong>.
+    {% endblocktranslate %}</p>
+</section>
