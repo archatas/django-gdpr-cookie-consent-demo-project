@@ -1,4 +1,4 @@
-Django==5.2
+Django==5.2.3
 requests==2.32.3
 selenium==4.10.0
-file:./private_wheels/django_gdpr_cookie_consent-3.2.1-py2.py3-none-any.whl
+file:./private_wheels/django_gdpr_cookie_consent-4.1.1-py2.py3-none-any.whl
