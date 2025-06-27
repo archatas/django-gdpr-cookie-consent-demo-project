@@ -6,6 +6,7 @@
     --dark: #1E1916;
     --cc-backdrop: rgba(0, 0, 0, 0.2);
     --cc-dialog-margin-correction: -19px;
+    --cc-page-scroll-buffer: 111px;
 }
 html, body {
     margin: 0;
@@ -424,4 +425,8 @@ h6,
 
 .copyright a:hover {
     color: var(--light);
+}
+
+#cc_accept_all, #cc_reject_all, #cc_save_preferences {
+    scroll-margin-top: var(--cc-page-scroll-buffer);
 }

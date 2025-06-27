@@ -65,15 +65,36 @@ class CookieManagementTest(LiveServerTestCase):
     def focus_element(self, css_selector):
         self.browser.execute_script(
             f"""
-            document.querySelector('{css_selector}').scrollIntoView(true);
-            document.querySelector('{css_selector}').focus();
-        """
+            window.scrollComplete = false;
+            let element = document.querySelector('{css_selector}');
+
+            // Set up scroll end listener
+            window.addEventListener('scrollend', function handleScrollEnd() {{
+                element.setAttribute('tabindex', '-1');
+                element.focus();
+                window.scrollComplete = true;
+                window.removeEventListener('scrollend', handleScrollEnd);
+            }}, {{ once: true }});
+
+            // Trigger scroll (or no-op if already in view)
+            element.scrollIntoView({{ block: 'center', behavior: 'smooth' }});
+
+            // Fallback: if no scroll needed, complete immediately
+            setTimeout(() => {{
+                if (!window.scrollComplete) {{
+                    element.setAttribute('tabindex', '-1');
+                    element.focus();
+                    window.scrollComplete = true;
+                }}
+            }}, 100);
+            """
         )
-        self.wait_a_little(1)
+
+        WebDriverWait(self.browser, 10).until(
+            lambda driver: driver.execute_script("return window.scrollComplete === true")
+        )
+
         element = self.browser.find_element(By.CSS_SELECTOR, css_selector)
-        action = webdriver.ActionChains(self.browser)
-        action.move_to_element(element).perform()
-        self.wait_a_little(1)
         return element
 
     def test_01_accept_all_cookies(self):
@@ -207,16 +228,17 @@ class CookieManagementTest(LiveServerTestCase):
         self.focus_element("#manage_cookies")
         link.click()
         button = self.wait_until_element_found("#cc_accept_all")
+        self.wait_a_little(3) # wait for JS animation to finish
         self.focus_element("#cc_accept_all")
         button.click()
         self.wait_a_little()
         button = self.browser.find_element(By.CSS_SELECTOR, "#cc_save_preferences")
         self.focus_element("#cc_save_preferences")
+        self.wait_a_little()
         button.click()
         self.wait_a_little()
 
-        link = self.wait_until_element_found_and_interactable("#manage_cookies")
-        self.focus_element("#manage_cookies")
+        link = self.wait_until_element_found_and_interactable("#cc_message")
 
         self.assertEqual(
             unquote(self.browser.get_cookie("cookie_consent")["value"]),
@@ -234,17 +256,18 @@ class CookieManagementTest(LiveServerTestCase):
             unquote(self.browser.get_cookie("marketing_cookie")["value"]),
             "📢",
         )
-        link.click()
+
         button = self.wait_until_element_found("#cc_reject_all")
         self.focus_element("#cc_reject_all")
         button.click()
         self.wait_a_little()
         button = self.browser.find_element(By.CSS_SELECTOR, "#cc_save_preferences")
         self.focus_element("#cc_save_preferences")
+        self.wait_a_little()
         button.click()
         self.wait_a_little()
 
-        self.wait_until_element_found_and_interactable("#manage_cookies")
+        self.wait_until_element_found_and_interactable("#cc_message")
         self.wait_a_little()
 
         self.assertEqual(

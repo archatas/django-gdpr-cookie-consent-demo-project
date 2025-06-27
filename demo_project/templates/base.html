@@ -220,6 +220,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 {% include "gdpr_cookie_consent/includes/cookie_consent.html" %}
+<script>
+    let consentPreferences = null;
 
+    document.addEventListener('grantGDPRCookieConsent', (e) => {
+        console.log(`${e.detail.section} cookies granted`);
+    });
+
+    document.addEventListener('denyGDPRCookieConsent', (e) => {
+        console.log(`${e.detail.section} cookies denied`);
+    });
+
+    document.addEventListener('changeGDPRCookieConsent', (e) => {
+        const comparison = {};
+        Object.keys(e.detail.consentPreferences).forEach(key => {
+            comparison[key] = {
+                before: e.detail.previousConsentPreferences[key],
+                after: e.detail.consentPreferences[key],
+                changed: e.detail.previousConsentPreferences[key] !== e.detail.consentPreferences[key]
+            };
+        });
+        console.table(comparison);
+        consentPreferences = e.detail.consentPreferences;
+    });
+</script>
 </body>
 </html>
