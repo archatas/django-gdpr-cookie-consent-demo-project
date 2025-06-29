@@ -15,7 +15,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 
 from gdpr_cookie_consent.models import CookieConsentRecord
 
-
 SHOW_BROWSER = getattr(settings, "TESTS_SHOW_BROWSER", False)
 COOKIE_CONSENT_SETTINGS = deepcopy(settings.COOKIE_CONSENT_SETTINGS)
 COOKIE_CONSENT_SETTINGS["redirect_url"] = "test"
@@ -37,6 +36,11 @@ class CookieManagementTest(LiveServerTestCase):
         chrome_options.add_argument("--window-size=1280,720")
         chrome_options.add_argument("--window-position=50,50")
         chrome_options.add_argument("--disable-search-engine-choice-screen")
+
+        chrome_options.set_capability(
+            "goog:loggingPrefs",
+            {"browser": "ALL", "driver": "ALL", "performance": "ALL"},
+        )
 
         cls.browser = webdriver.Chrome(
             service=ChromeService(executable_path=driver_path),
@@ -91,11 +95,29 @@ class CookieManagementTest(LiveServerTestCase):
         )
 
         WebDriverWait(self.browser, 10).until(
-            lambda driver: driver.execute_script("return window.scrollComplete === true")
+            lambda driver: driver.execute_script(
+                "return window.scrollComplete === true"
+            )
         )
 
         element = self.browser.find_element(By.CSS_SELECTOR, css_selector)
         return element
+
+    def extract_log_sequence(self):
+        """Extracts messages like "functionality cookies granted" or "marketing cookies denied" from console.log()"""
+        import re
+
+        granting_denying_pattern = re.compile(r"[a-z]+ cookies (granted|denied)")
+        consent_preferences_pattern = re.compile(r"consentPreferences: (\{.+})")
+        logs = self.browser.get_log("browser")
+        sequence = []
+        for log in logs:
+            if log["level"] == "INFO":
+                if group := granting_denying_pattern.search(log["message"]):
+                    sequence.append(group[0])
+                elif group := consent_preferences_pattern.search(log["message"]):
+                    sequence.append(group[1].replace("\\", ""))
+        return sequence
 
     def test_01_accept_all_cookies(self):
         """
@@ -127,6 +149,17 @@ class CookieManagementTest(LiveServerTestCase):
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
 
+        sequence = self.extract_log_sequence()
+        self.assertEqual(
+            sequence,
+            [
+                "functionality cookies granted",
+                "performance cookies granted",
+                "marketing cookies granted",
+                '{"functionality":true,"performance":true,"marketing":true}',
+            ],
+        )
+
     def test_02_reject_all_cookies(self):
         """
         Tries to reject all cookies in the modal dialog.
@@ -156,6 +189,17 @@ class CookieManagementTest(LiveServerTestCase):
             None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
+
+        sequence = self.extract_log_sequence()
+        self.assertEqual(
+            sequence,
+            [
+                "functionality cookies denied",
+                "performance cookies denied",
+                "marketing cookies denied",
+                '{"functionality":false,"performance":false,"marketing":false}',
+            ],
+        )
 
     def test_03_accept_only_functionality_cookies(self):
         """
@@ -191,6 +235,17 @@ class CookieManagementTest(LiveServerTestCase):
             None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
+
+        sequence = self.extract_log_sequence()
+        self.assertEqual(
+            sequence,
+            [
+                "functionality cookies granted",
+                "performance cookies denied",
+                "marketing cookies denied",
+                '{"functionality":true,"performance":false,"marketing":false}',
+            ],
+        )
 
     def test_04_manage_cookies(self):
         """
@@ -228,7 +283,7 @@ class CookieManagementTest(LiveServerTestCase):
         self.focus_element("#manage_cookies")
         link.click()
         button = self.wait_until_element_found("#cc_accept_all")
-        self.wait_a_little(3) # wait for JS animation to finish
+        self.wait_a_little(3)  # wait for JS animation to finish
         self.focus_element("#cc_accept_all")
         button.click()
         self.wait_a_little()
@@ -287,3 +342,18 @@ class CookieManagementTest(LiveServerTestCase):
             None,
         )
         self.assertEqual(CookieConsentRecord.objects.count(), 2)
+
+        sequence = self.extract_log_sequence()
+        self.assertEqual(
+            sequence,
+            [
+                "functionality cookies granted",
+                "performance cookies granted",
+                "marketing cookies granted",
+                '{"functionality":true,"performance":true,"marketing":true}',
+                "functionality cookies denied",
+                "performance cookies denied",
+                "marketing cookies denied",
+                '{"functionality":false,"performance":false,"marketing":false}',
+            ],
+        )
