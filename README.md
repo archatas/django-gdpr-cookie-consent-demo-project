@@ -61,15 +61,15 @@ With the virtual environment activated, install pip requirements:
 (venv)$ pip install -r requirements.txt
 ```
 
-### 4. Download Webdriver for Chrome
+### 4. Install Playwright browsers
 
-Upgrade your Chrome to the latest version and then run the management command:
+With the virtual environment activated, install Playwright browsers:
 
 ```shell
-(venv)$ python manage.py download_chromedriver
+(venv)$ playwright install chromium
 ```
 
-It will download and extract the latest stable webdriver for your Chrome browser to the `drivers` directory.
+This will download the Chromium browser for Playwright to use in tests.
 
 ### 5. Run database migrations and collect static files
 
@@ -80,7 +80,7 @@ With the virtual environment activated, run database migrations:
 (venv)$ python manage.py collectstatic --noinput
 ```
 
-### 6. Run Selenium tests
+### 6. Run Playwright tests
 
 With the virtual environment activated, run the tests:
 
