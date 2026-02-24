@@ -1,0 +1,11 @@
+[project]
+name = "django-gdpr-cookie-consent-demo-project"
+version = "0.1.0"
+description = "Demo project for the django-gdpr-cookie-consent package"
+readme = "README.md"
+license = {file = "LICENSE.md"}
+requires-python = ">=3.8"
+
+[tool.setuptools.packages.find]
+include = ["*"]
+
