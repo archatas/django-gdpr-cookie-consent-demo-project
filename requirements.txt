@@ -3,4 +3,5 @@ greenlet @ git+https://github.com/python-greenlet/greenlet.git
 requests==2.32.3
 playwright==1.58.0
 tox==4.45.0
-file:./private_wheels/django_gdpr_cookie_consent-4.1.2-py2.py3-none-any.whl
+--find-links=./private_wheels/
+django-gdpr-cookie-consent

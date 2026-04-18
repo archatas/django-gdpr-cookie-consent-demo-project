@@ -1,15 +1,18 @@
 import os
+from importlib import import_module
 from copy import deepcopy
 from urllib.parse import unquote
-from time import sleep
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.test import LiveServerTestCase
 from django.test import override_settings
 
 from playwright.sync_api import sync_playwright, Page, Browser, BrowserContext
 
 from gdpr_cookie_consent.models import CookieConsentRecord
+
+SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 SHOW_BROWSER = getattr(settings, "TESTS_SHOW_BROWSER", False)
 COOKIE_CONSENT_SETTINGS = deepcopy(settings.COOKIE_CONSENT_SETTINGS)
@@ -114,6 +117,13 @@ class CookieManagementTest(LiveServerTestCase):
         Tries to accept all cookies in the modal dialog.
         """
         self.context.clear_cookies()
+        self.assertEqual(CookieConsentRecord.objects.count(), 0)
+
+        User = get_user_model()
+        superuser = User.objects.create_superuser(
+            username="admin", password="secret", email="admin@example.com"
+        )
+
         self.page.goto(f"{self.live_server_url}/test/")
         # self.wait_a_little(30)  # DEBUG: for the screen recording
         button = self.wait_until_element_found("#cc_accept_all_cookies")
@@ -121,24 +131,16 @@ class CookieManagementTest(LiveServerTestCase):
         button.click()
         self.wait_a_little()
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
+        cookies = {cookie["name"]: unquote(cookie["value"]) for cookie in self.context.cookies()}
         self.assertEqual(
-            unquote(cookies["cookie_consent"]["value"]),
+            cookies["cookie_consent"],
             "functionality|performance|marketing",
         )
-        self.assertEqual(
-            unquote(cookies["functionality_cookie"]["value"]),
-            "🛠",
-        )
-        self.assertEqual(
-            unquote(cookies["performance_cookie"]["value"]),
-            "📊",
-        )
-        self.assertEqual(
-            unquote(cookies["marketing_cookie"]["value"]),
-            "📢",
-        )
+        self.assertEqual(cookies["functionality_cookie"], "🛠")
+        self.assertEqual(cookies["performance_cookie"], "📊")
+        self.assertEqual(cookies["marketing_cookie"], "📢")
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
+        self.assertIsNone(CookieConsentRecord.objects.first().user)
 
         sequence = self.extract_log_sequence()
         self.assertEqual(
@@ -150,6 +152,23 @@ class CookieManagementTest(LiveServerTestCase):
                 '{"functionality":true,"performance":true,"marketing":true}',
             ],
         )
+
+        record = CookieConsentRecord.objects.first()
+        self.assertEqual(record.user, None)
+
+        session = SessionStore(session_key=cookies["sessionid"])
+        self.assertEqual(session.get("ok"), "OK")
+        self.assertEqual(session.get("cookie_consent_record_id"), record.pk)
+
+        # Log into /admin/ and verify the consent record gets the user assigned.
+        self.page.goto(f"{self.live_server_url}/admin/")
+        self.wait_until_element_found("#id_username").fill("admin")
+        self.page.locator("#id_password").fill("secret")
+        self.page.locator('[type="submit"]').click()
+        self.wait_until_element_found("#user-tools")  # admin dashboard loaded
+
+        record.refresh_from_db()
+        self.assertEqual(record.user, superuser)
 
     def test_02_reject_all_cookies(self):
         """
@@ -163,11 +182,8 @@ class CookieManagementTest(LiveServerTestCase):
         button.click()
         self.wait_a_little()
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
-        self.assertEqual(
-            unquote(cookies["cookie_consent"]["value"]),
-            '""',
-        )
+        cookies = {cookie["name"]: unquote(cookie["value"]) for cookie in self.context.cookies()}
+        self.assertEqual(cookies["cookie_consent"], '""')
         self.assertNotIn("functionality_cookie", cookies)
         self.assertNotIn("performance_cookie", cookies)
         self.assertNotIn("marketing_cookie", cookies)
@@ -201,15 +217,9 @@ class CookieManagementTest(LiveServerTestCase):
         button.click()
         self.wait_a_little()
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
-        self.assertEqual(
-            unquote(cookies["cookie_consent"]["value"]),
-            "functionality",
-        )
-        self.assertEqual(
-            unquote(cookies["functionality_cookie"]["value"]),
-            "🛠",
-        )
+        cookies = {cookie["name"]: unquote(cookie["value"]) for cookie in self.context.cookies()}
+        self.assertEqual(cookies["cookie_consent"], "functionality")
+        self.assertEqual(cookies["functionality_cookie"], "🛠")
         self.assertNotIn("performance_cookie", cookies)
         self.assertNotIn("marketing_cookie", cookies)
         self.assertEqual(CookieConsentRecord.objects.count(), 1)
@@ -241,7 +251,7 @@ class CookieManagementTest(LiveServerTestCase):
         self.focus_element("#cc_modal_close")
         button.click()
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
+        cookies = {cookie["name"]: unquote(cookie["name"]) for cookie in self.context.cookies()}
         self.assertNotIn("cookie_consent", cookies)
         self.assertNotIn("functionality_cookie", cookies)
         self.assertNotIn("performance_cookie", cookies)
@@ -263,23 +273,14 @@ class CookieManagementTest(LiveServerTestCase):
 
         link = self.wait_until_element_found_and_interactable("#cc_message")
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
+        cookies = {cookie["name"]: unquote(cookie["value"]) for cookie in self.context.cookies()}
         self.assertEqual(
-            unquote(cookies["cookie_consent"]["value"]),
+            cookies["cookie_consent"],
             "functionality|performance|marketing",
         )
-        self.assertEqual(
-            unquote(cookies["functionality_cookie"]["value"]),
-            "🛠",
-        )
-        self.assertEqual(
-            unquote(cookies["performance_cookie"]["value"]),
-            "📊",
-        )
-        self.assertEqual(
-            unquote(cookies["marketing_cookie"]["value"]),
-            "📢",
-        )
+        self.assertEqual(cookies["functionality_cookie"], "🛠")
+        self.assertEqual(cookies["performance_cookie"], "📊")
+        self.assertEqual(cookies["marketing_cookie"], "📢")
 
         button = self.wait_until_element_found("#cc_reject_all")
         self.focus_element("#cc_reject_all")
@@ -294,11 +295,8 @@ class CookieManagementTest(LiveServerTestCase):
         self.wait_until_element_found_and_interactable("#cc_message")
         self.wait_a_little()
 
-        cookies = {cookie["name"]: cookie for cookie in self.context.cookies()}
-        self.assertEqual(
-            unquote(cookies["cookie_consent"]["value"]),
-            '""',
-        )
+        cookies = {cookie["name"]: unquote(cookie["value"]) for cookie in self.context.cookies()}
+        self.assertEqual(cookies["cookie_consent"], '""',)
         self.assertNotIn("functionality_cookie", cookies)
         self.assertNotIn("performance_cookie", cookies)
         self.assertNotIn("marketing_cookie", cookies)

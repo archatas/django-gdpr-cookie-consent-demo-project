@@ -83,6 +83,12 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": str(BASE_DIR / "db.sqlite3"),
+        # check_same_thread=False is required for LiveServerTestCase: the live server
+        # runs in a separate thread and needs to share the same SQLite connection.
+        # This is safe for SQLite in development/test use.
+        "OPTIONS": {
+            "check_same_thread": False,
+        },
     }
 }
 
@@ -347,7 +353,7 @@ COOKIE_CONSENT_SETTINGS = {
             "providers": [
                 {
                     "title": _("This website"),
-                    "description": _(""),
+                    "description": "",
                     "description_template_name": "",
                     "cookies": [
                         {
