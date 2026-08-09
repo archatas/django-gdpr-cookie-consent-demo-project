@@ -1,7 +1,7 @@
-Django==5.2.3
+Django==6.1
 greenlet @ git+https://github.com/python-greenlet/greenlet.git
-requests==2.32.3
-playwright==1.58.0
-tox==4.45.0
+requests==2.34.2
+playwright==1.62.0
+tox==4.48.0
 --find-links=./private_wheels/
 django-gdpr-cookie-consent
